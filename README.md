@@ -2,7 +2,7 @@
 
 The public download page for [Maple Helper](https://github.com/Amitaflalo1995/maple-helper): a static site with no build step and no dependencies.
 
-Live at **https://amitaflalo1995.github.io/maple-helper-site/**
+Live at **https://maplehelper.app/**
 Hebrew is the default (`index.html`, right-to-left) and English lives in `en/index.html`.
 
 ```
@@ -39,7 +39,7 @@ All paths inside the pages are relative, so the folder works at a domain root or
 **GitHub Pages** (how this repository is published)
 
 1. Repository **Settings → Pages → Deploy from a branch**: `main`, folder `/ (root)`.
-2. The site is then at `https://amitaflalo1995.github.io/maple-helper-site/`; every push to `main` updates it.
+2. The site is then at `https://maplehelper.app/`; every push to `main` updates it.
 3. The old address (`/maple-helper/`) redirects here: the app repository's `gh-pages` branch holds only
    small redirect pages.
 
@@ -54,7 +54,7 @@ All paths inside the pages are relative, so the folder works at a domain root or
 
 ## When the final URL is chosen
 
-The placeholder address is `https://amitaflalo1995.github.io/maple-helper-site/`. Replace it everywhere
+The placeholder address is `https://maplehelper.app/`. Replace it everywhere
 it appears (a search for `amitaflalo1995.github.io` finds every occurrence):
 
 | File | What to change |
