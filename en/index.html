@@ -169,6 +169,9 @@
     <symbol id="i-mac" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></symbol>
     <symbol id="i-zap" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
     <symbol id="i-image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.6-4.6a1.5 1.5 0 0 0-2.1 0L5 20"/></g></symbol>
+    <symbol id="i-tools" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></g></symbol>
+    <symbol id="i-coin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6v2M12 16v2"/></g></symbol>
     <symbol id="i-star" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="m12 2.8 2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3-4.6-4.4 6.3-.9z"/></symbol>
     <symbol id="i-notes" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></g></symbol>
     <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></g></symbol>
@@ -202,6 +205,7 @@
       <ul>
         <li><a href="#how">How it works</a></li>
         <li><a href="#features">Features</a></li>
+        <li><a href="#tools">Play tools</a></li>
         <li><a href="#install">Install</a></li>
         <li><a href="#privacy">Privacy</a></li>
         <li><a href="#faq">FAQ</a></li>
@@ -393,6 +397,72 @@
             <li><span>Every update is checked against a checksum before it's installed</span></li>
             <li><span>Your conversations and characters carry over between versions</span></li>
           </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="tools" aria-labelledby="tools-title">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="kicker">New in 0.7</p>
+        <h2 id="tools-title">Play tools: calculators and planners beside the chat</h2>
+        <p>The tools button in the chat opens a window that sits next to the game. Everything in it is worked out from the database and your character, without asking the AI or waiting.</p>
+      </div>
+
+      <div class="bento">
+        <article class="tile wide split glass reveal">
+          <div>
+            <h3><span class="ico"><svg aria-hidden="true"><use href="#i-tools"/></svg></span>Where to train, and a hit & damage calculator</h3>
+            <p>Maps for your level, ranked: your hit chance, hits to kill, EXP per monster and how many kills to the next level.</p>
+            <p>In the calculator, pick a monster from a list with pictures to see the ACC you need to never miss, and where it lives.</p>
+          </div>
+          <div class="shot crop">
+            <picture>
+              <source media="(prefers-color-scheme: dark)" srcset="../assets/shots/en/tools-train-dark.webp">
+              <img src="../assets/shots/en/tools-train-light.webp" width="1190" height="1840" loading="lazy" decoding="async"
+                   alt="Play tools, where to train: maps for Lv. 34 with hit chance, hits to kill and EXP">
+            </picture>
+          </div>
+        </article>
+
+        <article class="tile half glass reveal">
+          <h3><span class="ico"><svg aria-hidden="true"><use href="#i-star"/></svg></span>Crafting</h3>
+          <p>Six professions, each explained: what it makes, the teacher and their town, the first and master quests, and where to craft. Below: every recipe for your level, best value first.</p>
+          <div class="shot crop">
+            <picture>
+              <source media="(prefers-color-scheme: dark)" srcset="../assets/shots/en/tools-crafting-dark.webp">
+              <img src="../assets/shots/en/tools-crafting-light.webp" width="1190" height="1840" loading="lazy" decoding="async"
+                   alt="Crafting: Woodcrafting with its teacher Vicious in Henesys Market, the quests and the work station">
+            </picture>
+          </div>
+        </article>
+
+        <article class="tile half glass reveal">
+          <h3><span class="ico"><svg aria-hidden="true"><use href="#i-notes"/></svg></span>Quests for your level</h3>
+          <p>The quests you can take now and the ones coming up, with the NPC's picture, what to bring and what you get. Mark the ones you've done.</p>
+          <div class="shot crop">
+            <picture>
+              <source media="(prefers-color-scheme: dark)" srcset="../assets/shots/en/tools-quests-dark.webp">
+              <img src="../assets/shots/en/tools-quests-light.webp" width="1190" height="1840" loading="lazy" decoding="async"
+                   alt="Quests for Lv. 34 with pictures of the NPC, the items and the rewards">
+            </picture>
+          </div>
+        </article>
+
+        <article class="tile third glass reveal">
+          <h3><span class="ico"><svg aria-hidden="true"><use href="#i-user"/></svg></span>Build plan</h3>
+          <p>The AP, SP and gear tables from your class guide, with your level's row highlighted. Plus citizenship: which town suits you and its quests.</p>
+        </article>
+
+        <article class="tile third glass reveal">
+          <h3><span class="ico"><svg aria-hidden="true"><use href="#i-coin"/></svg></span>Prices, bag & shopping</h3>
+          <p>NPC prices and a live Free Market median from player reports. A check of what to sell and what to keep for crafting, a shopping list for a map, and an EXP-per-hour meter.</p>
+        </article>
+
+        <article class="tile third glass reveal">
+          <h3><span class="ico"><svg aria-hidden="true"><use href="#i-help"/></svg></span>A ? beside every term</h3>
+          <p>Not sure what Avoid or AP means? Hover the orange mark for a short explanation, in the tools, the chat and the guides.</p>
         </article>
       </div>
     </div>
