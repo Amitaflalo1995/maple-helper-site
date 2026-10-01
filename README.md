@@ -1,10 +1,12 @@
 # Maple Helper website
 
-The public download page for Maple Helper: a static site with no build step and no dependencies.
+The public download page for [Maple Helper](https://github.com/Amitaflalo1995/maple-helper): a static site with no build step and no dependencies.
+
+Live at **https://amitaflalo1995.github.io/maple-helper-site/**
 Hebrew is the default (`index.html`, right-to-left) and English lives in `en/index.html`.
 
 ```
-site/
+(repository root)
   index.html            Hebrew page (default, RTL)
   en/index.html         English page
   404.html              "page not found" (GitHub Pages serves it automatically)
@@ -34,26 +36,25 @@ as they will online.
 
 All paths inside the pages are relative, so the folder works at a domain root or in a subfolder.
 
-**GitHub Pages**
+**GitHub Pages** (how this repository is published)
 
-1. Repository **Settings → Pages**.
-2. Either deploy from a branch and pick the folder (Pages only offers `/` or `/docs`, so you'd move
-   or copy `site/` to `docs/`), or use a GitHub Actions workflow that uploads `site/` with
-   `actions/upload-pages-artifact` (`path: site`) and `actions/deploy-pages`.
-3. The site is then at `https://amitaflalo1995.github.io/maple-helper/`.
+1. Repository **Settings → Pages → Deploy from a branch**: `main`, folder `/ (root)`.
+2. The site is then at `https://amitaflalo1995.github.io/maple-helper-site/`; every push to `main` updates it.
+3. The old address (`/maple-helper/`) redirects here: the app repository's `gh-pages` branch holds only
+   small redirect pages.
 
 `.nojekyll` is already there, so GitHub serves the files as they are.
 
 **Vercel**
 
 1. Import the repository in Vercel.
-2. Set **Root Directory** to `site`, **Framework Preset** to *Other*, and leave the build command
+2. Leave **Root Directory** empty, **Framework Preset** to *Other*, and leave the build command
    and output directory empty.
 3. Deploy. No `vercel.json` is needed.
 
 ## When the final URL is chosen
 
-The placeholder address is `https://amitaflalo1995.github.io/maple-helper/`. Replace it everywhere
+The placeholder address is `https://amitaflalo1995.github.io/maple-helper-site/`. Replace it everywhere
 it appears (a search for `amitaflalo1995.github.io` finds every occurrence):
 
 | File | What to change |
@@ -62,7 +63,7 @@ it appears (a search for `amitaflalo1995.github.io` finds every occurrence):
 | `en/index.html` | the same list as `index.html` (its canonical and `og:url` end in `/en/`) |
 | `sitemap.xml` | both `<loc>` entries and all `xhtml:link` alternates |
 | `robots.txt` | the `Sitemap:` line |
-| `404.html` | the two home links (`/maple-helper/` and `/maple-helper/en/`). On a custom domain at the root, change them to `/` and `/en/` |
+| `404.html` | the two home links (`/maple-helper-site/` and `/maple-helper-site/en/`). On a custom domain at the root, change them to `/` and `/en/` |
 
 Also update `<lastmod>` in `sitemap.xml` when the content changes.
 
@@ -100,3 +101,8 @@ attributes in the HTML.
 Game data and images courtesy of NiaMeowDB (meowdb.com). Font: Rubik (Google Fonts, SIL Open Font
 License). Maple Helper is unofficial and not affiliated with Nexon; no Nexon or MapleStory logos
 are used, only the game's name as text.
+
+## Screenshots
+
+`assets/shots/` is rendered from the real app windows by the app repository's tools:
+`tools/site_shots.py` (raw PNGs) and `tools/site_shots_webp.py <raw_dir> <this repo>/assets/shots`.
