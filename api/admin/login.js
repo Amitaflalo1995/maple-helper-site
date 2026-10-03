@@ -1,16 +1,16 @@
 "use strict";
 const auth = require("../_lib/auth");
 
-/* Best-effort brute-force brake, kept in this function instance's memory: failures per
-   client, plus a cap on failures from everyone together so an attack spread over many
-   addresses still stalls. Instances are reused (Fluid Compute) but not shared, so also add
-   a Vercel Firewall rate-limit rule on /api/admin/login for a hard limit. */
+/* Best-effort brute-force brake: failures per client, kept in this function instance's
+   memory. Instances are reused (Fluid Compute) but not shared, so also add a Vercel Firewall
+   rate-limit rule on /api/admin/login for a hard limit.
+   There is deliberately no cap across all clients: anyone could trip it and lock the real
+   managers out. Guessing spread over many addresses is answered by the password's length
+   instead (12+ characters, see auth.configured). */
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_FAILS = 8;            // per client
-const MAX_FAILS_TOTAL = 40;     // all clients together, per window
 const MAX_TRACKED = 5000;
 const fails = new Map();
-let total = { first: 0, count: 0 };
 
 /* Vercel sets both headers itself, so a client can't spoof them. An IPv6 client usually
    owns a whole /64, so it counts as one client. */
@@ -30,8 +30,6 @@ const expired = (f, now) => now - f.first > WINDOW_MS;
 
 function blocked(key) {
   const now = Date.now();
-  if (expired(total, now)) total = { first: now, count: 0 };
-  if (total.count >= MAX_FAILS_TOTAL) return true;
   const f = fails.get(key);
   if (!f) return false;
   if (expired(f, now)) { fails.delete(key); return false; }
@@ -40,12 +38,10 @@ function blocked(key) {
 
 function recordFail(key) {
   const now = Date.now();
-  total.count += 1;
   const f = fails.get(key);
   if (!f || expired(f, now)) fails.set(key, { first: now, count: 1 });
   else f.count += 1;
-  /* Never wipe the table (that would reset an attacker's own count): drop expired entries,
-     and if it's still full the total cap above is what's holding the line. */
+  /* Never wipe the table (that would reset an attacker's own count): drop expired entries only. */
   if (fails.size > MAX_TRACKED) {
     for (const [k, v] of fails) if (expired(v, now)) fails.delete(k);
   }

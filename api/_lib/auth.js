@@ -18,7 +18,7 @@ function sign(payload) {
 }
 
 function configured() {
-  return (process.env.ADMIN_PASSWORD || "").length >= 8;
+  return (process.env.ADMIN_PASSWORD || "").length >= 12;
 }
 
 /* Hash both sides first so the comparison takes the same time whatever the lengths. */
