@@ -92,7 +92,7 @@ Environment variables (Vercel → Project → Settings → Environment Variables
 | `GITHUB_TOKEN` | optional: repository traffic, and 5,000 instead of 60 GitHub API calls/hour |
 | `POSTHOG_PERSONAL_API_KEY`, `POSTHOG_PROJECT_ID` | reading app and site stats (key scope `query:read`) |
 | `POSTHOG_PROJECT_KEY` | the project's `phc_` key: turns on site visit counting |
-| `POSTHOG_HOST`, `POSTHOG_INGEST_HOST` | only for US cloud (defaults: `https://eu.posthog.com`, `https://eu.i.posthog.com`) |
+| `POSTHOG_HOST`, `POSTHOG_INGEST_HOST` | only for an EU project (defaults are US cloud: `https://us.posthog.com`, `https://us.i.posthog.com`) |
 | `VERCEL_API_TOKEN`, `VERCEL_PROJECT`, `VERCEL_TEAM_ID` | optional: the deployments list |
 
 Each source that is not configured shows a short setup hint instead of numbers.
