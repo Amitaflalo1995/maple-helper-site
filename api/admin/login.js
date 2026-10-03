@@ -5,8 +5,9 @@ const auth = require("../_lib/auth");
    client, plus a cap on failures from everyone together so guessing spread over many
    addresses still stalls. Instances are reused (Fluid Compute) but not shared, so also add
    a Vercel Firewall rate-limit rule on /api/admin/login for a hard limit.
-   Neither limit applies to a known device (a browser that signed in correctly before, see
-   auth.isKnownDevice), so an attacker tripping the cap can't lock the real managers out. */
+   A known device (a browser that signed in correctly before, see auth.isKnownDevice) skips
+   only the all-clients cap, so an attacker tripping it can't lock the real managers out; the
+   per-client limit still applies to it, so the cookie never buys unlimited guesses. */
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_FAILS = 8;            // per client
 const MAX_FAILS_TOTAL = 40;     // all clients together, per window
@@ -30,19 +31,19 @@ function clientKey(req) {
 
 const expired = (f, now) => now - f.first > WINDOW_MS;
 
-function blocked(key) {
+function blocked(key, known) {
   const now = Date.now();
   if (expired(total, now)) total = { first: now, count: 0 };
-  if (total.count >= MAX_FAILS_TOTAL) return true;
+  if (!known && total.count >= MAX_FAILS_TOTAL) return true;
   const f = fails.get(key);
   if (!f) return false;
   if (expired(f, now)) { fails.delete(key); return false; }
   return f.count >= MAX_FAILS;
 }
 
-function recordFail(key) {
+function recordFail(key, known) {
   const now = Date.now();
-  total.count += 1;
+  if (!known) total.count += 1;
   const f = fails.get(key);
   if (!f || expired(f, now)) fails.set(key, { first: now, count: 1 });
   else f.count += 1;
@@ -65,11 +66,11 @@ module.exports = async function login(req, res) {
 
   const key = clientKey(req);
   const known = auth.isKnownDevice(req);
-  if (!known && blocked(key)) return res.status(429).json({ error: "too-many-attempts" });
+  if (blocked(key, known)) return res.status(429).json({ error: "too-many-attempts" });
 
   const password = req.body && typeof req.body.password === "string" ? req.body.password : "";
   if (!auth.passwordMatches(password)) {
-    if (!known) recordFail(key);
+    recordFail(key, known);
     await pause(600);
     return res.status(401).json({ error: "wrong-password" });
   }

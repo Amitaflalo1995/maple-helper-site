@@ -99,8 +99,8 @@ Each source that is not configured shows a short setup hint instead of numbers.
 
 Wrong passwords are limited per client (8 per 15 minutes, an IPv6 /64 counting as one) and for
 everyone together (40 per 15 minutes), per function instance. A browser that signed in correctly
-before is a *known device* (a second signed cookie, 90 days) and skips both limits, so an attack
-can't lock out managers who have signed in before; a new device may have to wait out the 15 minutes
+before is a *known device* (a second signed cookie, 90 days) and skips the all-clients limit, so an
+attack can't lock out managers who have signed in before (the per-client limit still applies to it); a new device may have to wait out the 15 minutes
 during one. Changing `ADMIN_PASSWORD` forgets all known devices. For a hard limit across instances,
 add a Vercel Firewall rate-limit rule on `/api/admin/login`.
 
