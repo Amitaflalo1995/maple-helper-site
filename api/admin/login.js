@@ -62,7 +62,9 @@ module.exports = async function login(req, res) {
   if (!String(req.headers["content-type"] || "").startsWith("application/json")) {
     return res.status(415).json({ error: "content-type" });
   }
-  if (!auth.configured()) return res.status(503).json({ error: "not-configured" });
+  if (!auth.configured()) {
+    return res.status(503).json({ error: "not-configured", reason: auth.setupProblem(), env: process.env.VERCEL_ENV || "local" });
+  }
 
   const key = clientKey(req);
   const known = auth.isKnownDevice(req);
