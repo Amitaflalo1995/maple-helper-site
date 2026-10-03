@@ -21,6 +21,14 @@ function sign(payload) {
   return crypto.createHmac("sha256", key()).update(payload).digest("base64url");
 }
 
+/* Why sign-in is off, for the login page: "missing" or "too-short" ("" when it's fine).
+   Safe to tell anyone: in both cases no password works at all. */
+function setupProblem() {
+  const pass = process.env.ADMIN_PASSWORD;
+  if (!pass) return "missing";
+  return pass.length < 12 ? "too-short" : "";
+}
+
 function configured() {
   return (process.env.ADMIN_PASSWORD || "").length >= 12;
 }
@@ -87,4 +95,4 @@ function noStore(res) {
   res.setHeader("X-Robots-Tag", "noindex, nofollow");
 }
 
-module.exports = { configured, passwordMatches, setSession, clearSession, isAdmin, isKnownDevice, noStore };
+module.exports = { configured, setupProblem, passwordMatches, setSession, clearSession, isAdmin, isKnownDevice, noStore };

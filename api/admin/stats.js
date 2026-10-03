@@ -30,7 +30,11 @@ async function snapshot() {
 module.exports = async function stats(req, res) {
   auth.noStore(res);
   if (req.method !== "GET") return res.status(405).json({ error: "method" });
-  if (!auth.isAdmin(req)) return res.status(401).json({ error: "unauthorized", configured: auth.configured() });
+  if (!auth.isAdmin(req)) {
+    return res.status(401).json({
+      error: "unauthorized", configured: auth.configured(), reason: auth.setupProblem(), env: process.env.VERCEL_ENV || "local",
+    });
+  }
 
   const age = cache ? Date.now() - cache.at : Infinity;
   const force = req.query && req.query.fresh === "1" && age > MIN_FORCE_MS;
