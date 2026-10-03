@@ -2,14 +2,17 @@
 
 The public download page for [Maple Helper](https://github.com/Maple-Helper/maple-helper): a static site with no build step and no dependencies.
 
-Live at **https://maplehelper.app/**
-Hebrew is the default (`index.html`, right-to-left) and English lives in `en/index.html`.
+Live at **https://www.maplehelper.app/**
+English is the home page (`index.html`) and Hebrew lives in `he/index.html` (right-to-left).
+`en/index.html` only sends old `/en/` links to `/` (Vercel also redirects `/en` with `vercel.json`).
 
 ```
 (repository root)
-  index.html            Hebrew page (default, RTL)
-  en/index.html         English page
-  404.html              "page not found" (GitHub Pages serves it automatically)
+  index.html            English page (home)
+  he/index.html         Hebrew page (RTL)
+  en/index.html         redirect from the old /en/ address to /
+  404.html              "page not found"
+  vercel.json           the /en -> / redirects
   assets/css/site.css   all styles, light and dark (follows the system setting)
   assets/js/site.js     optional extras: OS detection, install tabs, latest version, scroll reveal
   assets/shots/         app screenshots, rendered from the real Qt widgets (light and dark)
@@ -24,57 +27,35 @@ computer" note; it asks the GitHub API for the latest version number and shows i
 ## Preview locally
 
 ```
-cd site
 python -m http.server 8000
 ```
 
-Open http://localhost:8000/ (Hebrew) and http://localhost:8000/en/ (English).
-Use a server rather than opening the file directly, so relative paths and the version lookup behave
+Run it in the repository root, then open http://localhost:8000/ (English) and http://localhost:8000/he/ (Hebrew).
+Use a server rather than opening the file directly, so absolute paths and the version lookup behave
 as they will online.
 
 ## Deploy
 
-All paths inside the pages are relative, so the folder works at a domain root or in a subfolder.
+The site is hosted on **Vercel** at `https://www.maplehelper.app/`, connected to this repository:
+every push to `main` deploys, and every pull request gets a preview. Project settings: no root
+directory, Framework Preset *Other*, no build command, no output directory.
 
-**GitHub Pages** (how this repository is published)
+The canonical address `https://www.maplehelper.app/` is written into `index.html`, `he/index.html`
+(canonical, `hreflang`, `og:*`, `twitter:image` and the JSON-LD block), `sitemap.xml` and `robots.txt`.
+If the domain ever changes, search for `maplehelper.app` and update every hit. Also update `<lastmod>` in
+`sitemap.xml` when the content changes.
 
-1. Repository **Settings → Pages → Deploy from a branch**: `main`, folder `/ (root)`.
-2. The site is then at `https://maplehelper.app/`; every push to `main` updates it.
-3. The old address (`/maple-helper/`) redirects here: the app repository's `gh-pages` branch holds only
-   small redirect pages.
+Old addresses keep working: the app repository's `gh-pages` branch
+(`maple-helper.github.io/maple-helper/`) holds only small pages that redirect to `www.maplehelper.app`.
 
-`.nojekyll` is already there, so GitHub serves the files as they are.
-
-**Vercel**
-
-1. Import the repository in Vercel.
-2. Leave **Root Directory** empty, **Framework Preset** to *Other*, and leave the build command
-   and output directory empty.
-3. Deploy. No `vercel.json` is needed.
-
-## When the final URL is chosen
-
-The placeholder address is `https://maplehelper.app/`. Replace it everywhere
-it appears (a search for `amitaflalo1995.github.io` finds every occurrence):
-
-| File | What to change |
-| --- | --- |
-| `index.html` | `<link rel="canonical">`, the three `hreflang` links, `og:url`, `og:image`, `twitter:image`, and every URL inside the JSON-LD block (`@id`, `url`, `image`, `screenshot`) |
-| `en/index.html` | the same list as `index.html` (its canonical and `og:url` end in `/en/`) |
-| `sitemap.xml` | both `<loc>` entries and all `xhtml:link` alternates |
-| `robots.txt` | the `Sitemap:` line |
-| `404.html` | the two home links (`/maple-helper-site/` and `/maple-helper-site/en/`). On a custom domain at the root, change them to `/` and `/en/` |
-
-Also update `<lastmod>` in `sitemap.xml` when the content changes.
-
-The download buttons don't need changing: they point at
+The download buttons point at
 `https://github.com/Maple-Helper/maple-helper/releases/latest/download/…`, which always serves the
 newest release, as long as each release keeps the asset names `MapleHelper-Setup.exe` and
 `MapleHelper-macOS.dmg`.
 
 ## Editing the content
 
-- Text lives directly in the two HTML files. Keep them in step: same sections, same facts.
+- Text lives directly in the two HTML files (`index.html` and `he/index.html`). Keep them in step: same sections, same facts.
 - In the Hebrew page, wrap every English word, number, version or file name inside a Hebrew sentence
   in `<bdi dir="ltr">…</bdi>` (for example `ל-<bdi dir="ltr">MapleStory Classic World</bdi>`), and key
   names in `<kbd>`. Keep a key and the punctuation right after it together with
@@ -89,8 +70,8 @@ newest release, as long as each release keeps the asset names `MapleHelper-Setup
 
 The screenshots are real renders of the app's Qt widgets (`Overlay`, `WishlistDialog`,
 `SettingsDialog`) made with PySide6 and `widget.grab()`, light and dark. `assets/shots/*.webp` show
-the Hebrew app (used by `index.html`); `assets/shots/en/*.webp` show the English app (used by
-`en/index.html`). The English page also has its own social image, `assets/img/og-en.jpg`. They were made
+the Hebrew app (used by `he/index.html`); `assets/shots/en/*.webp` show the English app (used by
+`index.html`). The English page also has its own social image, `assets/img/og-en.jpg`. They were made
 with a throwaway `APPDATA` folder so no real user data is involved, then cropped to the window's
 rounded edge (the app draws a transparent shadow margin around it) and saved as WebP. Re-render them
 when the app's look changes, keeping the same file names and sizes, or update the `width`/`height`
