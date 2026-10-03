@@ -526,7 +526,7 @@
     return api("/api/admin/stats" + (force ? "?fresh=1" : "")).then(function (r) {
       btn.disabled = false;
       if (r.status === 401) {
-        return showLogin(r.body.configured === false ? "Admin sign-in isn't set up: add ADMIN_PASSWORD (8+ characters) in Vercel and redeploy." : "");
+        return showLogin(r.body.configured === false ? "Admin sign-in isn't set up: add ADMIN_PASSWORD (12+ characters) in Vercel and redeploy." : "");
       }
       if (r.status !== 200) { $("updated").textContent = "Refresh failed (" + r.status + ")"; return; }
       $("login").hidden = true;
@@ -558,7 +558,7 @@
       showLogin({
         "wrong-password": "Wrong password.",
         "too-many-attempts": "Too many attempts. Try again in 15 minutes.",
-        "not-configured": "Admin sign-in isn't set up: add ADMIN_PASSWORD (8+ characters) in Vercel and redeploy.",
+        "not-configured": "Admin sign-in isn't set up: add ADMIN_PASSWORD (12+ characters) in Vercel and redeploy.",
       }[r.body.error] || "Sign-in failed (" + r.status + ").");
     }).catch(function () { b.disabled = false; showLogin("Network error."); });
   });
