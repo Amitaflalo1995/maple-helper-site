@@ -5,6 +5,10 @@ const crypto = require("crypto");
 
 const COOKIE = "mh_admin";
 const SESSION_SECONDS = 12 * 3600;
+/* A browser that signed in correctly is remembered as a known device, so an attack that
+   trips the login limits can't lock it out (see login.js). Separate cookie, longer life. */
+const KNOWN = "mh_known";
+const KNOWN_SECONDS = 90 * 86400;
 
 /* The signing key changes with the password, so changing ADMIN_PASSWORD signs everyone out. */
 function key() {
@@ -29,16 +33,17 @@ function passwordMatches(given) {
   return crypto.timingSafeEqual(a, b);
 }
 
-function newToken() {
-  const exp = String(Math.floor(Date.now() / 1000) + SESSION_SECONDS);
-  return exp + "." + sign(exp);
+/* `purpose` keeps the two tokens apart: a known-device token is never a valid session. */
+function newToken(purpose, seconds) {
+  const exp = String(Math.floor(Date.now() / 1000) + seconds);
+  return exp + "." + sign(purpose + ":" + exp);
 }
 
-function tokenValid(token) {
+function tokenValid(token, purpose) {
   if (!configured() || typeof token !== "string") return false;
   const [exp, mac] = token.split(".");
   if (!exp || !mac || !/^\d+$/.test(exp) || Number(exp) < Date.now() / 1000) return false;
-  const want = Buffer.from(sign(exp));
+  const want = Buffer.from(sign(purpose + ":" + exp));
   const got = Buffer.from(mac);
   return want.length === got.length && crypto.timingSafeEqual(want, got);
 }
@@ -52,21 +57,29 @@ function readCookie(req, name) {
   return "";
 }
 
-function cookie(value, maxAge) {
-  /* Path=/api/admin: the cookie only travels with admin API calls, never with page loads. */
-  return `${COOKIE}=${value}; Path=/api/admin; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`;
+function cookie(name, value, maxAge) {
+  /* Path=/api/admin: the cookies only travel with admin API calls, never with page loads. */
+  return `${name}=${value}; Path=/api/admin; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`;
 }
 
 function setSession(res) {
-  res.setHeader("Set-Cookie", cookie(newToken(), SESSION_SECONDS));
+  res.setHeader("Set-Cookie", [
+    cookie(COOKIE, newToken("session", SESSION_SECONDS), SESSION_SECONDS),
+    cookie(KNOWN, newToken("known", KNOWN_SECONDS), KNOWN_SECONDS),
+  ]);
 }
 
+/* Signing out ends the session but keeps the device known. */
 function clearSession(res) {
-  res.setHeader("Set-Cookie", cookie("", 0));
+  res.setHeader("Set-Cookie", cookie(COOKIE, "", 0));
 }
 
 function isAdmin(req) {
-  return tokenValid(readCookie(req, COOKIE));
+  return tokenValid(readCookie(req, COOKIE), "session");
+}
+
+function isKnownDevice(req) {
+  return tokenValid(readCookie(req, KNOWN), "known");
 }
 
 function noStore(res) {
@@ -74,4 +87,4 @@ function noStore(res) {
   res.setHeader("X-Robots-Tag", "noindex, nofollow");
 }
 
-module.exports = { configured, passwordMatches, setSession, clearSession, isAdmin, noStore };
+module.exports = { configured, passwordMatches, setSession, clearSession, isAdmin, isKnownDevice, noStore };
