@@ -72,7 +72,7 @@
     if (cached && cached.v && Date.now() - cached.t < 3600 * 1000) {
       showVersion(cached.v);
     } else if (window.fetch) {
-      fetch("https://api.github.com/repos/Amitaflalo1995/maple-helper/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
+      fetch("https://api.github.com/repos/Maple-Helper/maple-helper/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (rel) {
           if (!rel || !rel.tag_name) return;

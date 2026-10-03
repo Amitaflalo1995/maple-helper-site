@@ -1,6 +1,6 @@
 # Maple Helper website
 
-The public download page for [Maple Helper](https://github.com/Amitaflalo1995/maple-helper): a static site with no build step and no dependencies.
+The public download page for [Maple Helper](https://github.com/Maple-Helper/maple-helper): a static site with no build step and no dependencies.
 
 Live at **https://maplehelper.app/**
 Hebrew is the default (`index.html`, right-to-left) and English lives in `en/index.html`.
@@ -68,7 +68,7 @@ it appears (a search for `amitaflalo1995.github.io` finds every occurrence):
 Also update `<lastmod>` in `sitemap.xml` when the content changes.
 
 The download buttons don't need changing: they point at
-`https://github.com/Amitaflalo1995/maple-helper/releases/latest/download/…`, which always serves the
+`https://github.com/Maple-Helper/maple-helper/releases/latest/download/…`, which always serves the
 newest release, as long as each release keeps the asset names `MapleHelper-Setup.exe` and
 `MapleHelper-macOS.dmg`.
 
