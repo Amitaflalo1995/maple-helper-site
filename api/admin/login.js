@@ -1,29 +1,54 @@
 "use strict";
 const auth = require("../_lib/auth");
 
-/* Best-effort brute-force brake: failures per IP, kept in this function instance's memory.
-   Instances are reused (Fluid Compute) but not shared, so also add a Vercel Firewall
-   rate-limit rule on /api/admin/login for a hard limit. */
+/* Best-effort brute-force brake, kept in this function instance's memory: failures per
+   client, plus a cap on failures from everyone together so an attack spread over many
+   addresses still stalls. Instances are reused (Fluid Compute) but not shared, so also add
+   a Vercel Firewall rate-limit rule on /api/admin/login for a hard limit. */
 const WINDOW_MS = 15 * 60 * 1000;
-const MAX_FAILS = 8;
+const MAX_FAILS = 8;            // per client
+const MAX_FAILS_TOTAL = 40;     // all clients together, per window
+const MAX_TRACKED = 5000;
 const fails = new Map();
+let total = { first: 0, count: 0 };
 
-function clientIp(req) {
-  return String(req.headers["x-real-ip"] || req.headers["x-forwarded-for"] || "").split(",")[0].trim() || "?";
+/* Vercel sets both headers itself, so a client can't spoof them. An IPv6 client usually
+   owns a whole /64, so it counts as one client. */
+function clientKey(req) {
+  const ip = String(req.headers["x-real-ip"] || req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  if (!ip) return "?";
+  if (ip.includes(":") && !ip.startsWith("::ffff:")) {
+    const full = ip.includes("::")
+      ? ip.replace("::", ":" + "0:".repeat(8 - ip.split(":").filter(Boolean).length)).replace(/^:|:$/g, "")
+      : ip;
+    return full.split(":").slice(0, 4).join(":") + "::/64";
+  }
+  return ip;
 }
 
-function blocked(ip) {
-  const f = fails.get(ip);
+const expired = (f, now) => now - f.first > WINDOW_MS;
+
+function blocked(key) {
+  const now = Date.now();
+  if (expired(total, now)) total = { first: now, count: 0 };
+  if (total.count >= MAX_FAILS_TOTAL) return true;
+  const f = fails.get(key);
   if (!f) return false;
-  if (Date.now() - f.first > WINDOW_MS) { fails.delete(ip); return false; }
+  if (expired(f, now)) { fails.delete(key); return false; }
   return f.count >= MAX_FAILS;
 }
 
-function recordFail(ip) {
-  const f = fails.get(ip);
-  if (!f || Date.now() - f.first > WINDOW_MS) fails.set(ip, { first: Date.now(), count: 1 });
+function recordFail(key) {
+  const now = Date.now();
+  total.count += 1;
+  const f = fails.get(key);
+  if (!f || expired(f, now)) fails.set(key, { first: now, count: 1 });
   else f.count += 1;
-  if (fails.size > 5000) fails.clear();
+  /* Never wipe the table (that would reset an attacker's own count): drop expired entries,
+     and if it's still full the total cap above is what's holding the line. */
+  if (fails.size > MAX_TRACKED) {
+    for (const [k, v] of fails) if (expired(v, now)) fails.delete(k);
+  }
 }
 
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -37,16 +62,16 @@ module.exports = async function login(req, res) {
   }
   if (!auth.configured()) return res.status(503).json({ error: "not-configured" });
 
-  const ip = clientIp(req);
-  if (blocked(ip)) return res.status(429).json({ error: "too-many-attempts" });
+  const key = clientKey(req);
+  if (blocked(key)) return res.status(429).json({ error: "too-many-attempts" });
 
   const password = req.body && typeof req.body.password === "string" ? req.body.password : "";
   if (!auth.passwordMatches(password)) {
-    recordFail(ip);
+    recordFail(key);
     await pause(600);
     return res.status(401).json({ error: "wrong-password" });
   }
-  fails.delete(ip);
+  fails.delete(key);
   auth.setSession(res);
   return res.status(200).json({ ok: true });
 };
