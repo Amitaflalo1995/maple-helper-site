@@ -84,6 +84,37 @@
     }
   }
 
+  /* ---------- anonymous visit counts (for the site's own admin dashboard) ----------
+     No cookies, no third-party script: a random per-tab id, sent to our /api/collect.
+     Skipped with Do Not Track / Global Privacy Control, and on local previews. */
+  (function () {
+    var dnt = navigator.doNotTrack === "1" || window.doNotTrack === "1" || navigator.globalPrivacyControl === true;
+    if (dnt || !navigator.sendBeacon || !/(^|\.)maplehelper\.app$|\.vercel\.app$/.test(location.hostname)) return;
+    var sid = null;
+    try {
+      sid = sessionStorage.getItem("mh-sid");
+      if (!sid) { sid = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem("mh-sid", sid); }
+    } catch (e) { sid = Math.random().toString(36).slice(2) + Date.now().toString(36); }
+    function send(e, extra) {
+      var body = { e: e, sid: sid, p: location.pathname, lang: root.lang, os: os };
+      for (var k in extra) body[k] = extra[k];
+      try { navigator.sendBeacon("/api/collect", new Blob([JSON.stringify(body)], { type: "text/plain" })); } catch (err) { /* ignore */ }
+    }
+    send("pageview", { ref: document.referrer || "" });
+    /* "still here" once a minute while the tab is visible, for at most 30 minutes */
+    var beats = 0;
+    var timer = setInterval(function () {
+      if (document.visibilityState !== "visible") return;
+      if (++beats > 30) { clearInterval(timer); return; }
+      send("heartbeat");
+    }, 60 * 1000);
+    document.addEventListener("click", function (ev) {
+      var a = ev.target.closest && ev.target.closest("a[href*='/releases/latest/download/']");
+      if (!a) return;
+      send("download", { target: /\.dmg$/.test(a.href) ? "mac" : /\.exe$/.test(a.href) ? "windows" : "other" });
+    });
+  })();
+
   /* ---------- gentle reveal on scroll ---------- */
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var items = document.querySelectorAll(".reveal");

@@ -12,7 +12,9 @@ English is the home page (`index.html`) and Hebrew lives in `he/index.html` (rig
   he/index.html         Hebrew page (RTL)
   en/index.html         redirect from the old /en/ address to /
   404.html              "page not found"
-  vercel.json           the /en -> / redirects
+  vercel.json           the /en -> / redirects, /admin security headers
+  admin/                the password-protected stats dashboard (see "Admin dashboard")
+  api/                  Vercel Functions for the dashboard and anonymous visit counts
   assets/css/site.css   all styles, light and dark (follows the system setting)
   assets/js/site.js     optional extras: OS detection, install tabs, latest version, scroll reveal
   assets/shots/         app screenshots, rendered from the real Qt widgets (light and dark)
@@ -52,6 +54,50 @@ The download buttons point at
 `https://github.com/Maple-Helper/maple-helper/releases/latest/download/…`, which always serves the
 newest release, as long as each release keeps the asset names `MapleHelper-Setup.exe` and
 `MapleHelper-macOS.dmg`.
+
+## Admin dashboard (`/admin`)
+
+A password-protected stats page for site managers at `https://www.maplehelper.app/admin/`.
+It is a static page (`admin/`) plus three small Vercel Functions with no dependencies:
+
+```
+  api/admin/login.js    POST {password} -> signed HttpOnly session cookie (12 h)
+  api/admin/logout.js   clears the cookie
+  api/admin/stats.js    everything the dashboard shows, cached for 60 s
+  api/collect.js        anonymous site visit counts, forwarded to PostHog
+  api/_lib/             shared helpers (not exposed as endpoints)
+```
+
+What it shows, and where each number comes from:
+
+- **Downloads** – GitHub Releases `download_count` per asset: installer, DMG, portable zip; plus
+  `kb-manifest.json` (running apps checking for game-data updates) and `SHA256SUMS.txt` (Windows
+  apps verifying a self-update). Works with no setup.
+- **App usage** – the app's opt-in anonymous stats in PostHog (`maplehelper/telemetry.py`):
+  active installs (15 min / day / week / month), questions, who answered, versions, OS, language.
+- **Website** – visitors online (last 5 minutes), visitors, page views, download clicks,
+  countries, referrers. `site.js` sends a page view, a once-a-minute "still here" ping while the
+  tab is visible, and download clicks to `/api/collect`. No cookies (random per-tab id), no IP
+  forwarded, skipped with Do Not Track / Global Privacy Control.
+- **GitHub repository** – stars, forks, issues; with a token also views, clones and referrers.
+- **Monitoring** – live checks of the site and the `releases/latest/download` links, recent
+  GitHub Actions runs, and Vercel deployments.
+
+Environment variables (Vercel → Project → Settings → Environment Variables), then redeploy:
+
+| Variable | Needed for |
+|---|---|
+| `ADMIN_PASSWORD` | **required**, 8+ characters. Changing it signs everyone out. |
+| `ADMIN_SESSION_SECRET` | optional extra secret mixed into the cookie signature |
+| `GITHUB_TOKEN` | optional: repository traffic, and 5,000 instead of 60 GitHub API calls/hour |
+| `POSTHOG_PERSONAL_API_KEY`, `POSTHOG_PROJECT_ID` | reading app and site stats (key scope `query:read`) |
+| `POSTHOG_PROJECT_KEY` | the project's `phc_` key: turns on site visit counting |
+| `POSTHOG_HOST`, `POSTHOG_INGEST_HOST` | only for US cloud (defaults: `https://eu.posthog.com`, `https://eu.i.posthog.com`) |
+| `VERCEL_API_TOKEN`, `VERCEL_PROJECT`, `VERCEL_TEAM_ID` | optional: the deployments list |
+
+Each source that is not configured shows a short setup hint instead of numbers. For a hard limit on
+password guessing, add a Vercel Firewall rate-limit rule on `/api/admin/login` (the function itself
+only slows down repeated failures).
 
 ## Editing the content
 
