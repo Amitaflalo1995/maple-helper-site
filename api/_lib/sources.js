@@ -220,7 +220,7 @@ async function posthog() {
   const key = process.env.POSTHOG_PERSONAL_API_KEY;
   const project = process.env.POSTHOG_PROJECT_ID;
   if (!key || !project) return { configured: false };
-  const host = (process.env.POSTHOG_HOST || "https://eu.posthog.com").replace(/\/$/, "");
+  const host = (process.env.POSTHOG_HOST || "https://us.posthog.com").replace(/\/$/, "");
 
   const names = Object.keys(QUERIES);
   const settled = await Promise.allSettled(names.map((n) => hogql(host, project, key, QUERIES[n])));

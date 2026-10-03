@@ -8,7 +8,7 @@
 
 const EVENTS = new Set(["pageview", "heartbeat", "download"]);
 const BOTS = /bot|crawl|spider|slurp|preview|lighthouse|headless|curl|wget|python|monitor/i;
-const HOST = (process.env.POSTHOG_INGEST_HOST || "https://eu.i.posthog.com").replace(/\/$/, "");
+const HOST = (process.env.POSTHOG_INGEST_HOST || "https://us.i.posthog.com").replace(/\/$/, "");
 
 const short = (v, n = 64) => (typeof v === "string" ? v.slice(0, n) : undefined);
 
