@@ -83,7 +83,7 @@
       ],
       "installUrl": "https://github.com/Maple-Helper/maple-helper/releases/latest",
       "releaseNotes": "https://github.com/Maple-Helper/maple-helper/releases",
-      "softwareRequirements": "Claude Pro or Max plan (via Claude Code) or a paid ChatGPT plan; or an Anthropic or OpenAI API key",
+      "softwareRequirements": "An AI account of your choice: Claude Pro or Max, a paid ChatGPT plan, a Google account (Gemini) or a Grok account; or an Anthropic, OpenAI, Gemini or xAI API key",
       "image": "https://www.maplehelper.app/assets/img/icon-512.png",
       "screenshot": [
         "https://www.maplehelper.app/assets/shots/en/mano-light.webp",
@@ -103,7 +103,7 @@
           "name": "Does Maple Helper cost anything?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The app is free and its code is open on GitHub. Claude (or ChatGPT, your choice) gives the harder answers, which needs your own plan: Claude Pro or Max, or a paid ChatGPT plan. A pay-as-you-go API key works too. Instant answers from the database don't count against your plan."
+            "text": "The app is free and its code is open on GitHub. The AI you choose (Claude, ChatGPT, Gemini or Grok) gives the harder answers, on your own account: Claude Pro or Max, a paid ChatGPT plan, your Google account for Gemini, or a Grok account (a free one works, with a limited quota). A pay-as-you-go API key works too. Instant answers from the database don't count against your plan."
           }
         },
         {
@@ -143,7 +143,7 @@
           "name": "What exactly is sent to the AI?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Only when you ask, and only to the AI you chose (Anthropic's Claude or OpenAI's ChatGPT): your question, a screenshot of the game window, and the context needed to answer (your character's details, the recent conversation and short summaries of earlier ones). Settings, the full history and voice recordings are kept on your computer. When you close a chat, it may be sent once more to summarize it for next time."
+            "text": "Only when you ask, and only to the AI you chose (Anthropic's Claude, OpenAI's ChatGPT, Google's Gemini or xAI's Grok): your question, a screenshot of the game window, and the context needed to answer (your character's details, the recent conversation and short summaries of earlier ones). Settings, the full history and voice recordings are kept on your computer. When you close a chat, it may be sent once more to summarize it for next time."
           }
         },
         {
@@ -285,7 +285,7 @@
         <li class="glass reveal">
           <span class="n" aria-hidden="true">3</span>
           <h3>Get an answer</h3>
-          <p>Simple questions, like a monster's HP or who drops an item, are answered instantly from the database on your computer. Claude answers the harder ones, using a MapleStory Classic database.</p>
+          <p>Simple questions, like a monster's HP or who drops an item, are answered instantly from the database on your computer. The AI you choose (Claude, ChatGPT, Gemini or Grok) answers the harder ones, using a MapleStory Classic database.</p>
         </li>
       </ol>
     </div>
@@ -303,8 +303,8 @@
         <article class="tile wide split glass reveal">
           <div>
             <h3><span class="ico"><svg aria-hidden="true"><use href="#i-zap"/></svg></span>Instant answers</h3>
-            <p>How much HP a monster has, what it drops, where an NPC is. Questions like these are answered in a second from the local database, without waiting for Claude.</p>
-            <p>Want the full explanation? One button sends the same question to Claude.</p>
+            <p>How much HP a monster has, what it drops, where an NPC is. Questions like these are answered in a second from the local database, without waiting for the AI.</p>
+            <p>Want the full explanation? One button sends the same question to your AI.</p>
           </div>
           <div class="shot crop">
             <picture>
@@ -366,19 +366,24 @@
           </div>
         </article>
 
-        <article class="tile third glass reveal">
+        <article class="tile half glass reveal">
           <h3><span class="ico"><svg aria-hidden="true"><use href="#i-notes"/></svg></span>Patch notes</h3>
           <p>When the game database updates, you see exactly what changed: new monsters and items, drops added or removed, changed stats. If an item on your list gets a new drop, you'll be told.</p>
         </article>
 
-        <article class="tile third glass reveal">
+        <article class="tile half glass reveal">
           <h3><span class="ico"><svg aria-hidden="true"><use href="#i-user"/></svg></span>Your character, kept up to date</h3>
           <p>No need to update anything by hand. When the AI answers, Maple Helper looks at the game screen and updates your level, job and character picture. Keep several characters, each with its own history.</p>
         </article>
 
-        <article class="tile third glass reveal">
+        <article class="tile half glass reveal">
           <h3><span class="ico"><svg aria-hidden="true"><use href="#i-mic"/></svg></span>Ask out loud</h3>
           <p>Press <span class="nw"><kbd>F10</kbd>,</span> talk, press it again. Speech is transcribed on your computer with ivrit.ai models, which understand Hebrew too, and the recording never leaves it.</p>
+        </article>
+
+        <article class="tile half glass reveal">
+          <h3><span class="ico"><svg aria-hidden="true"><use href="#i-chat"/></svg></span>Your choice of AI</h3>
+          <p>Claude, ChatGPT, Gemini or Grok, on your own account or an API key. Switch any time in settings. The app installs each one's official tool for you, with the progress right in the app, and keeps it read-only and on the game: it can't change files or browse the web, and questions about anything else get a short no.</p>
         </article>
 
         <article class="tile half glass reveal">
@@ -440,7 +445,7 @@
 
         <article class="tile half glass reveal">
           <h3><span class="ico"><svg aria-hidden="true"><use href="#i-notes"/></svg></span>Quests for your level</h3>
-          <p>The quests you can take now and the ones coming up, with the NPC's picture, what to bring and what you get. Mark the ones you've done.</p>
+          <p>The quests you can take now and the ones coming up, with the NPC's picture, what to bring and what you get. Search by quest, NPC, monster or item, and mark the ones you've done.</p>
           <div class="shot crop">
             <picture>
               <source media="(prefers-color-scheme: dark)" srcset="assets/shots/en/tools-quests-dark.webp">
@@ -474,7 +479,7 @@
       <div class="sec-head reveal">
         <p class="kicker">Install</p>
         <h2 id="install-title">What you need, and how to install</h2>
-        <p>Setup takes a few minutes. The app walks you through every step, including connecting Claude.</p>
+        <p>Setup takes a few minutes. The app walks you through every step, including installing and connecting your AI, right inside the app.</p>
       </div>
 
       <div class="two">
@@ -485,8 +490,8 @@
               <div><b>Windows 10 or 11, or macOS 12 or later</b>
               <span>On a Mac you need Apple Silicon (M1 or newer).</span></div></li>
             <li><span class="ico"><svg aria-hidden="true"><use href="#i-chat"/></svg></span>
-              <div><b>A Claude Pro or Max plan, or a paid ChatGPT plan</b>
-              <span>Signed in through Claude Code or ChatGPT's tool. If you don't have it yet, the app installs it and signs you in. An API key works too.</span></div></li>
+              <div><b>An AI account: Claude, ChatGPT, Gemini or Grok</b>
+              <span>Claude Pro or Max, a paid ChatGPT plan, your Google account for Gemini, or a Grok account (a free one works). Each runs through its maker's official tool: if you don't have it yet, the app installs it for you, with the progress in the app, and signs you in. An API key works too.</span></div></li>
             <li><span class="ico"><svg aria-hidden="true"><use href="#i-window"/></svg></span>
               <div><b>The game in a window mode</b>
               <span>Borderless or Windowed Fullscreen, so the chat can appear on top of it.</span></div></li>
@@ -508,7 +513,7 @@
             <ol class="install">
               <li><span><b>Download</b> <a href="https://github.com/Maple-Helper/maple-helper/releases/latest/download/MapleHelper-Setup.exe">MapleHelper-Setup.exe</a> and run it. No admin rights needed.</span></li>
               <li><span><b>If a blue SmartScreen window appears</b>, click "More info", then "Run anyway".</span></li>
-              <li><span><b>Go through the setup screens:</b> language, connecting Claude, and your character.</span></li>
+              <li><span><b>Go through the setup screens:</b> language, choosing and connecting your AI, and your character.</span></li>
               <li><span><b>Open the game and press <span class="nw"><kbd>F9</kbd>.</span></b></span></li>
             </ol>
             <p class="callout"><svg aria-hidden="true"><use href="#i-info"/></svg>
@@ -576,7 +581,7 @@
       <div class="faq">
         <details class="glass reveal">
           <summary><span>Does Maple Helper cost anything?</span></summary>
-          <div class="a"><p>The app is free and its code is open on GitHub. Claude (or ChatGPT, your choice) gives the harder answers, which needs your own plan: Claude Pro or Max, or a paid ChatGPT plan. A pay-as-you-go API key works too. Instant answers from the database don't count against your plan.</p></div>
+          <div class="a"><p>The app is free and its code is open on GitHub. The AI you choose (Claude, ChatGPT, Gemini or Grok) gives the harder answers, on your own account: Claude Pro or Max, a paid ChatGPT plan, your Google account for Gemini, or a Grok account (a free one works, with a limited quota). A pay-as-you-go API key works too. Instant answers from the database don't count against your plan.</p></div>
         </details>
         <details class="glass reveal">
           <summary><span>Can I get banned for using it?</span></summary>
@@ -596,7 +601,7 @@
         </details>
         <details class="glass reveal">
           <summary><span>What exactly is sent to the AI?</span></summary>
-          <div class="a"><p>Only when you ask, and only to the AI you chose (Anthropic's Claude or OpenAI's ChatGPT): your question, a screenshot of the game window, and the context needed to answer (your character's details, the recent conversation and short summaries of earlier ones). Settings, the full history and voice recordings are kept on your computer. When you close a chat, it may be sent once more to summarize it for next time.</p></div>
+          <div class="a"><p>Only when you ask, and only to the AI you chose (Anthropic's Claude, OpenAI's ChatGPT, Google's Gemini or xAI's Grok): your question, a screenshot of the game window, and the context needed to answer (your character's details, the recent conversation and short summaries of earlier ones). Settings, the full history and voice recordings are kept on your computer. When you close a chat, it may be sent once more to summarize it for next time.</p></div>
         </details>
         <details class="glass reveal">
           <summary><span>How do I update?</span></summary>
@@ -612,7 +617,7 @@
       <div class="final glass reveal">
         <img src="assets/img/mascot-240.webp" srcset="assets/img/mascot-240.webp 1x, assets/img/mascot-480.webp 2x" width="240" height="196" loading="lazy" decoding="async" alt="">
         <h2 id="final-title">Ready to try it?</h2>
-        <p>Download it, connect Claude, and press <kbd>F9</kbd> next time you're in the game.</p>
+        <p>Download it, connect your AI, and press <kbd>F9</kbd> next time you're in the game.</p>
         <div class="dl">
           <a class="btn" data-os="windows" href="https://github.com/Maple-Helper/maple-helper/releases/latest/download/MapleHelper-Setup.exe">
             <svg aria-hidden="true"><use href="#i-win"/></svg>
