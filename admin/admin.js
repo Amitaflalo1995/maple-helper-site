@@ -263,7 +263,7 @@
   function setupHint(what) {
     return {
       github: "Set <code>GITHUB_TOKEN</code> (a fine-grained token with read access to the repository's Administration or Traffic) to see repository views, clones and referrers, and to lift the 60 calls/hour limit.",
-      posthog: "Set <code>POSTHOG_PERSONAL_API_KEY</code> (scope: query:read) and <code>POSTHOG_PROJECT_ID</code> in Vercel to read app and site stats. EU cloud is the default; set <code>POSTHOG_HOST</code> for US.",
+      posthog: "Set <code>POSTHOG_PERSONAL_API_KEY</code> (scope: query:read) and <code>POSTHOG_PROJECT_ID</code> in Vercel to read app and site stats. US cloud is the default; for EU set <code>POSTHOG_HOST</code> and <code>POSTHOG_INGEST_HOST</code>.",
       site: "Set <code>POSTHOG_PROJECT_KEY</code> (the project's phc_ key) in Vercel to start counting site visits. Nothing is recorded until then.",
       app: "The app sends stats only when a player turns them on, and only once <code>PROJECT_KEY</code> is filled in <code>maplehelper/telemetry.py</code> and that version is released.",
       vercel: "Set <code>VERCEL_API_TOKEN</code> and <code>VERCEL_PROJECT</code> (project id or name; add <code>VERCEL_TEAM_ID</code> for a team project) to list deployments.",
@@ -510,6 +510,14 @@
 
   /* ---------------------------------------------------------------- flow */
 
+  /* The server says which: no ADMIN_PASSWORD in this environment, or one under 12 characters. */
+  function setupMessage(body) {
+    var where = { preview: "Preview", production: "Production", development: "Development" }[body.env] || body.env || "this";
+    return body.reason === "too-short"
+      ? "Sign-in is off: ADMIN_PASSWORD in the " + where + " environment is shorter than 12 characters. Set a longer one in Vercel and redeploy."
+      : "Sign-in is off: this " + where + " deployment has no ADMIN_PASSWORD. In Vercel, add it with " + where + " ticked (12+ characters), then redeploy.";
+  }
+
   function showLogin(msg) {
     clearInterval(timer);
     $("app").hidden = true;
@@ -526,7 +534,7 @@
     return api("/api/admin/stats" + (force ? "?fresh=1" : "")).then(function (r) {
       btn.disabled = false;
       if (r.status === 401) {
-        return showLogin(r.body.configured === false ? "Admin sign-in isn't set up: add ADMIN_PASSWORD (8+ characters) in Vercel and redeploy." : "");
+        return showLogin(r.body.configured === false ? setupMessage(r.body) : "");
       }
       if (r.status !== 200) { $("updated").textContent = "Refresh failed (" + r.status + ")"; return; }
       $("login").hidden = true;
@@ -558,8 +566,7 @@
       showLogin({
         "wrong-password": "Wrong password.",
         "too-many-attempts": "Too many attempts. Try again in 15 minutes.",
-        "not-configured": "Admin sign-in isn't set up: add ADMIN_PASSWORD (8+ characters) in Vercel and redeploy.",
-      }[r.body.error] || "Sign-in failed (" + r.status + ").");
+      }[r.body.error] || (r.body.error === "not-configured" ? setupMessage(r.body) : "Sign-in failed (" + r.status + ")."));
     }).catch(function () { b.disabled = false; showLogin("Network error."); });
   });
 

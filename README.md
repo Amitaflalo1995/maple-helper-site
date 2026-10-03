@@ -87,17 +87,22 @@ Environment variables (Vercel → Project → Settings → Environment Variables
 
 | Variable | Needed for |
 |---|---|
-| `ADMIN_PASSWORD` | **required**, 8+ characters. Changing it signs everyone out. |
+| `ADMIN_PASSWORD` | **required**, 12+ characters (a long random passphrase). Changing it signs everyone out. |
 | `ADMIN_SESSION_SECRET` | optional extra secret mixed into the cookie signature |
 | `GITHUB_TOKEN` | optional: repository traffic, and 5,000 instead of 60 GitHub API calls/hour |
 | `POSTHOG_PERSONAL_API_KEY`, `POSTHOG_PROJECT_ID` | reading app and site stats (key scope `query:read`) |
 | `POSTHOG_PROJECT_KEY` | the project's `phc_` key: turns on site visit counting |
-| `POSTHOG_HOST`, `POSTHOG_INGEST_HOST` | only for US cloud (defaults: `https://eu.posthog.com`, `https://eu.i.posthog.com`) |
+| `POSTHOG_HOST`, `POSTHOG_INGEST_HOST` | only for an EU project (defaults are US cloud: `https://us.posthog.com`, `https://us.i.posthog.com`) |
 | `VERCEL_API_TOKEN`, `VERCEL_PROJECT`, `VERCEL_TEAM_ID` | optional: the deployments list |
 
-Each source that is not configured shows a short setup hint instead of numbers. For a hard limit on
-password guessing, add a Vercel Firewall rate-limit rule on `/api/admin/login` (the function itself
-only slows down repeated failures).
+Each source that is not configured shows a short setup hint instead of numbers.
+
+Wrong passwords are limited per client (8 per 15 minutes, an IPv6 /64 counting as one) and for
+everyone together (40 per 15 minutes), per function instance. A browser that signed in correctly
+before is a *known device* (a second signed cookie, 90 days) and skips the all-clients limit, so an
+attack can't lock out managers who have signed in before (the per-client limit still applies to it); a new device may have to wait out the 15 minutes
+during one. Changing `ADMIN_PASSWORD` forgets all known devices. For a hard limit across instances,
+add a Vercel Firewall rate-limit rule on `/api/admin/login`.
 
 ## Editing the content
 
