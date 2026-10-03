@@ -29,6 +29,13 @@
     });
   }
 
+  /* The header's Download button downloads right away (it used to scroll to the hero, which at the top of the
+     page did nothing visible): the Windows installer, the Mac app on a Mac, and on a phone the hero instead. */
+  document.querySelectorAll("a.nav-dl").forEach(function (a) {
+    if (os === "mac") a.href = a.href.replace("MapleHelper-Setup.exe", "MapleHelper-macOS.dmg");
+    else if (os === "mobile") a.href = "#download";
+  });
+
   /* ---------- install tabs (Windows / macOS) ---------- */
   document.querySelectorAll(".tabs").forEach(function (box) {
     var tabs = Array.prototype.slice.call(box.querySelectorAll("[role=tab]"));
